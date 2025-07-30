@@ -2,7 +2,7 @@
 #include <Config.h>
 namespace MPL::Hooks {
     namespace detail {
-        void Reconfigure(RE::TESObjectREFR*, MPL::Config::RoomMarker, bool);
+        void Reconfigure(RE::TESObjectREFR*, MPL::Config::RoomMarker);
     }
     void Install();
 }

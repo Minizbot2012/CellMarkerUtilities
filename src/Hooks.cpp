@@ -3,10 +3,10 @@ namespace MPL::Hooks
 {
     namespace detail
     {
-        void Reconfigure(RE::TESObjectREFR* a_ref, MPL::Config::RoomMarker marker_data, bool from_hook)
+        void Reconfigure(RE::TESObjectREFR* a_ref, MPL::Config::RoomMarker marker_data)
         {
             auto* dh = RE::TESDataHandler::GetSingleton();
-            logger::info("Patching ref {:x} file: {} from_hook {}", a_ref->formID, a_ref->sourceFiles.array->front()->GetFilename(), from_hook);
+            logger::info("Patching ref {:x} file: {}", a_ref->formID, a_ref->sourceFiles.array->front()->GetFilename());
             auto* lightingTmpl = dh->LookupForm<RE::BGSLightingTemplate>(marker_data.formId, marker_data.lightMod);
             if (lightingTmpl != nullptr)
             {
@@ -38,7 +38,7 @@ namespace MPL::Hooks
                 auto comp = std::format("{:x}:{}", a_ref->GetLocalFormID(), a_ref->sourceFiles.array->front()->GetFilename());
                 if (data_container->Markers.contains(comp))
                 {
-                    detail::Reconfigure(a_ref, data_container->Markers.at(comp), true);
+                    detail::Reconfigure(a_ref, data_container->Markers.at(comp));
                 }
             }
         }
