@@ -21,8 +21,7 @@ jobs:
       run: |
           git clone https://github.com/microsoft/vcpkg ${{ env.VCPKG_ROOT }}
           cd "${{ env.VCPKG_ROOT }}"
-          bootstrap-vcpkg.bat -disableMetrics
-          vcpkg integrate
+          bootstrap-vcpkg.bat -disableMetric
     - name: Configure CMake
       run: cmake --preset ${{env.PRESET}}
 
