@@ -1,0 +1,8 @@
+{
+  "version-string": "1",
+  "dependencies": [
+    "commonlibsse",
+    "clib-util",
+    "glaze"
+  ]
+}

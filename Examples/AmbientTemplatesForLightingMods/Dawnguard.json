@@ -1,0 +1,18 @@
+[
+    {
+        "form": "7368:Dawnguard.esm",
+        "lightingTemplate": "875:AT - Nightmare.esp"
+    },
+    {
+        "form": "138FA:Dawnguard.esm",
+        "lightingTemplate": "875:AT - Nightmare.esp"
+    },
+    {
+        "form": "138FB:Dawnguard.esm",
+        "lightingTemplate": "875:AT - Nightmare.esp"
+    },
+    {
+        "form": "138FC:Dawnguard.esm",
+        "lightingTemplate": "875:AT - Nightmare.esp"
+    }
+]
