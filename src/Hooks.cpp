@@ -3,11 +3,10 @@ namespace MPL::Hooks
 {
     namespace detail
     {
-        void Reconfigure(RE::TESObjectREFR* a_ref, MPL::Config::RoomMarker marker_data)
+        void Reconfigure(RE::TESObjectREFR* a_ref, MPL::Config::RoomMarkerData marker_data)
         {
-            auto* dh = RE::TESDataHandler::GetSingleton();
             logger::info("Patching ref {:x} file: {}", a_ref->GetFormID(), a_ref->sourceFiles.array->front()->GetFilename());
-            auto* lightingTmpl = dh->LookupForm<RE::BGSLightingTemplate>(marker_data.formId, marker_data.lightMod);
+            auto* lightingTmpl = GetFormForString<RE::BGSLightingTemplate>(marker_data.lightingTemplate);
             if (lightingTmpl != nullptr)
             {
                 auto edr = a_ref->extraList.GetByType<RE::ExtraRoomRefData>();
@@ -36,9 +35,10 @@ namespace MPL::Hooks
             {
                 auto data_container = MPL::Config::DataContainer::GetSingleton();
                 auto comp = std::format("{:x}:{}", a_ref->GetLocalFormID(), a_ref->sourceFiles.array->front()->GetFilename());
-                if (data_container->Markers.contains(comp))
+                auto marker = std::find_if(std::execution::par, data_container->Markers.begin(), data_container->Markers.end(), [&](auto md) { return md.form == comp; });
+                if (marker != data_container->Markers.end())
                 {
-                    detail::Reconfigure(a_ref, data_container->Markers.at(comp));
+                    detail::Reconfigure(a_ref, *marker);
                 }
             }
         }

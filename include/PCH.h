@@ -27,4 +27,20 @@ using namespace clib_util;
 namespace logger = SKSE::log;
 using namespace std::literals;
 
+template <class T>
+T* GetFormForString(std::string forms)
+{
+    if (forms.contains(":"))
+    {
+        auto loc = forms.find(":");
+        auto formId = strtoul(forms.substr(0, loc), nullptr, 16);
+        auto modName = forms.substr(loc + 1);
+        auto dh = RE::TESDataHandler::GetSingleton();
+        return dh->LookupForm<T>(formId, modName);
+    }
+    else {
+        return RE::TESForm::LookupByEditorID<T>(s);
+    }
+}
+
 #include "Hooking.h"
