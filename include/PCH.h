@@ -10,6 +10,7 @@
 #include <spdlog/fmt/bin_to_hex.h>
 #include <windows.h>
 #include <ClibUtil/editorID.hpp>
+#include <SimpleIni.h>
 #include <unordered_set>
 // clang-format on
 using namespace clib_util;
@@ -26,21 +27,5 @@ using namespace clib_util;
 #define DLLEXPORT __declspec(dllexport)
 namespace logger = SKSE::log;
 using namespace std::literals;
-
-template <class T>
-T* GetFormForString(std::string forms)
-{
-    if (forms.contains(":"))
-    {
-        auto loc = forms.find(":");
-        auto formId = strtoul(forms.substr(0, loc).c_str(), nullptr, 16);
-        auto modName = forms.substr(loc + 1);
-        auto dh = RE::TESDataHandler::GetSingleton();
-        return dh->LookupForm<T>(formId, modName);
-    }
-    else {
-        return RE::TESForm::LookupByEditorID<T>(forms);
-    }
-}
 
 #include "Hooking.h"

@@ -3,6 +3,6 @@
   "dependencies": [
     "commonlibsse",
     "clib-util",
-    "glaze"
+    "simpleini"
   ]
 }

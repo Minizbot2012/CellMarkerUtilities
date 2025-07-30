@@ -1,10 +1,16 @@
 #pragma once
-#include <Config.h>
 namespace MPL::Hooks
 {
-    namespace detail
+    class StatData : public REX::Singleton<StatData>
     {
-        void Reconfigure(RE::TESObjectREFR*, MPL::Config::RoomMarker);
-    }
+    public:
+        RE::TESForm* Lookup(std::string s);
+        std::unordered_map<std::string, RE::FormID> cache;
+        std::string file;
+    };
+
+    template <class T>
+    T* GetForm(std::string forms);
+
     void Install();
 }  // namespace MPL::Hooks

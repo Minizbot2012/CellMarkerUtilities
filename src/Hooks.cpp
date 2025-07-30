@@ -1,6 +1,17 @@
-#include <Config.h>
+#include <Hooks.h>
 namespace MPL::Hooks
 {
+    template <class T>
+    T* GetForm(std::string edid)
+    {
+        auto std = StatData::GetSingleton();
+        auto form = std->Lookup(edid);
+        if (form != nullptr && form->Is(T::FORMTYPE))
+        {
+            return form->As<T>();
+        }
+        return nullptr;
+    }
     struct InitOBJ
     {
         using Target = RE::TESObjectREFR;
@@ -9,29 +20,50 @@ namespace MPL::Hooks
             func(a_ref);
             if (a_ref->extraList.HasType(RE::ExtraDataType::kRoomRefData))
             {
-                auto data_container = MPL::Config::DataContainer::GetSingleton();
-                auto comp = std::format("{:x}:{}", a_ref->GetLocalFormID(), a_ref->sourceFiles.array->front()->GetFilename());
-                auto marker = std::find_if(std::execution::par, data_container->Markers.begin(), data_container->Markers.end(), [&](auto md) { return md.form == comp; });
-                if (marker != data_container->Markers.end())
+                auto edr = a_ref->extraList.GetByType<RE::ExtraRoomRefData>();
+                if (edr->data->lightingTemplate != nullptr)
                 {
-                    logger::info("Patching ref {:x} file: {}", a_ref->GetFormID(), a_ref->sourceFiles.array->front()->GetFilename());
-                    auto* lightingTmpl = GetFormForString<RE::BGSLightingTemplate>(marker->lightingTemplate);
-                    if (lightingTmpl != nullptr)
+                    auto itm = GetForm<RE::BGSLightingTemplate>(edr->data->lightingTemplate->GetFormEditorID());
+                    if (itm != nullptr)
                     {
-                        auto edr = a_ref->extraList.GetByType<RE::ExtraRoomRefData>();
-                        if (edr != nullptr && edr->data != nullptr)
-                        {
-                            logger::info("OLD Template FORMID: {:x}, FILE: {}", edr->data->lightingTemplate->GetFormID(), edr->data->lightingTemplate->sourceFiles.array->front()->GetFilename());
-                            edr->data->lightingTemplate = lightingTmpl;
-                            logger::info("NEW Template FORMID: {:x}, FILE: {}", edr->data->lightingTemplate->GetFormID(), edr->data->lightingTemplate->sourceFiles.array->front()->GetFilename());
-                        }
-                        else {
-                            logger::info("Error in reference {:x} within file {}", a_ref->GetFormID(), a_ref->sourceFiles.array->front()->GetFilename());
-                        }
+                        edr->data->lightingTemplate = itm;
                     }
-                    else {
-                        logger::info("{:x} is missing Room Ref Data", a_ref->GetFormID());
-                    }
+                }
+            }
+        }
+        static inline REL::Relocation<decltype(thunk)> func;
+        static inline constexpr std::size_t index{ 0x13 };
+    };
+    struct InitWS
+    {
+        using Target = RE::TESWorldSpace;
+        static inline void thunk(Target* a_ref)
+        {
+            func(a_ref);
+            if (a_ref->lightingTemplate != nullptr)
+            {
+                auto lt = GetForm<RE::BGSLightingTemplate>(a_ref->lightingTemplate->GetFormEditorID());
+                if (lt != nullptr)
+                {
+                    a_ref->lightingTemplate = lt;
+                }
+            }
+        }
+        static inline REL::Relocation<decltype(thunk)> func;
+        static inline constexpr std::size_t index{ 0x13 };
+    };
+    struct InitCell
+    {
+        using Target = RE::TESObjectCELL;
+        static inline void thunk(Target* a_ref)
+        {
+            func(a_ref);
+            if (a_ref->lightingTemplate != nullptr)
+            {
+                auto lt = GetForm<RE::BGSLightingTemplate>(a_ref->lightingTemplate->GetFormEditorID());
+                if (lt != nullptr)
+                {
+                    a_ref->lightingTemplate = lt;
                 }
             }
         }
@@ -41,5 +73,35 @@ namespace MPL::Hooks
     void Install()
     {
         stl::install_hook<InitOBJ>();
+        stl::install_hook<InitWS>();
+        stl::install_hook<InitCell>();
+    }
+    RE::TESForm* StatData::Lookup(std::string s)
+    {
+        if (!this->cache.contains(s))
+        {
+            const auto& [map, lock] = RE::TESForm::GetAllForms();
+            [[maybe_unused]] const RE::BSReadLockGuard l{ lock };
+            if (map)
+            {
+                const auto it = std::find_if(std::execution::par, map->begin(), map->end(), [&](auto itm) {
+                    return itm.second->sourceFiles.array->front()->GetFilename() == this->file && itm.second->GetFormEditorID() == s;
+                });
+                if (it != map->end())
+                {
+                    cache.insert({ s, it->first });
+                    return it->second;
+                }
+                else {
+                    return nullptr;
+                }
+            }
+            else {
+                return nullptr;
+            }
+        }
+        else {
+            return RE::TESForm::LookupByID(cache.at(s));
+        }
     }
 }  // namespace MPL::Hooks

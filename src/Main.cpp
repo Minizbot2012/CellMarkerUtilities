@@ -1,12 +1,14 @@
-#include <Config.h>
 #include <Hooks.h>
 
 void OnInit(SKSE::MessagingInterface::Message* a_msg)
 {
+    CSimpleIniA ini;
+    auto SD = MPL::Hooks::StatData::GetSingleton();
     switch (a_msg->type)
     {
     case SKSE::MessagingInterface::kPostPostLoad:
-        MPL::Config::LoadConfigs();
+        ini.LoadFile("SKSE/Plugins/LightingUtil.ini");
+        SD->file = ini.GetValue("", "sSearchFile", "AT - Nightmare.esp");
         break;
     default:
         break;
