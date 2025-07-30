@@ -29,7 +29,7 @@ namespace MPL::Config
                     auto LightingTemplateMod = itm.lightingTemplate.substr(loc_it + 1);
                     auto data = RoomMarker{ LightingTemplateMod, strtoul(LightingTemplateForm.c_str(), nullptr, 16) };
                     auto data_key = std::format("{:x}:{}", strtoul(MarkerForm.c_str(), nullptr, 16), MarkerMod);
-                    dc->Markers.insert({data_key, data });
+                    dc->Markers.insert({ data_key, data });
                 }
             }
         }
