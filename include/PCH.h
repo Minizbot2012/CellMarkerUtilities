@@ -33,13 +33,13 @@ T* GetFormForString(std::string forms)
     if (forms.contains(":"))
     {
         auto loc = forms.find(":");
-        auto formId = strtoul(forms.substr(0, loc), nullptr, 16);
+        auto formId = strtoul(forms.substr(0, loc).c_str(), nullptr, 16);
         auto modName = forms.substr(loc + 1);
         auto dh = RE::TESDataHandler::GetSingleton();
         return dh->LookupForm<T>(formId, modName);
     }
     else {
-        return RE::TESForm::LookupByEditorID<T>(s);
+        return RE::TESForm::LookupByEditorID<T>(forms);
     }
 }
 

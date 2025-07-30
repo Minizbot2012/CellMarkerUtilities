@@ -3,7 +3,7 @@
 #include <filesystem>
 namespace MPL::Config
 {
-    struct RoomMarkerData
+    struct RoomMarker
     {
         std::string form;
         std::string lightingTemplate;
@@ -11,7 +11,7 @@ namespace MPL::Config
     class DataContainer : public REX::Singleton<DataContainer>
     {
     public:
-        std::vector<RoomMarkerData> Markers;
+        std::vector<RoomMarker> Markers;
     };
     
     static std::string ConfigFolder = "./Data/SKSE/MarkerData/";

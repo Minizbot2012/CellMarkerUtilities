@@ -11,7 +11,7 @@ namespace MPL::Config
             return;
         }
         auto dc = MPL::Config::DataContainer::GetSingleton();
-        std::vector<RoomMarkerData> pairs;
+        std::vector<RoomMarker> pairs;
         for (auto ent : std::filesystem::directory_iterator(ConfigFolder))
         {
             if (ent.path().filename().extension() == ".json")

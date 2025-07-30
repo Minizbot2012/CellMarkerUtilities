@@ -3,7 +3,7 @@ namespace MPL::Hooks
 {
     namespace detail
     {
-        void Reconfigure(RE::TESObjectREFR* a_ref, MPL::Config::RoomMarkerData marker_data)
+        void Reconfigure(RE::TESObjectREFR* a_ref, MPL::Config::RoomMarker marker_data)
         {
             logger::info("Patching ref {:x} file: {}", a_ref->GetFormID(), a_ref->sourceFiles.array->front()->GetFilename());
             auto* lightingTmpl = GetFormForString<RE::BGSLightingTemplate>(marker_data.lightingTemplate);
