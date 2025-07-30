@@ -13,7 +13,7 @@ namespace MPL::Config
     public:
         std::vector<RoomMarker> Markers;
     };
-    
+
     static std::string ConfigFolder = "./Data/SKSE/MarkerData/";
     void LoadConfigs();
 }  // namespace MPL::Config
