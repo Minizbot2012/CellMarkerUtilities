@@ -84,7 +84,7 @@ namespace MPL::Hooks
             [[maybe_unused]] const RE::BSReadLockGuard l{ lock };
             if (map)
             {
-                const auto it = std::find_if(std::execution::par, map->begin(), map->end(), [&](auto itm) {
+                const auto it = std::find_if(map->begin(), map->end(), [&](auto itm) {
                     return itm.second->sourceFiles.array->front()->GetFilename() == this->file && itm.second->GetFormEditorID() == s;
                 });
                 if (it != map->end())
