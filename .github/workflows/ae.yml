@@ -9,7 +9,7 @@ on:
 
 env:
   PRESET: "vs2022-windows-vcpkg-ae"
-  VCPKG_ROOT: ${{ env.VCPKG_INSTALLATION_ROOT }}
+  VCPKG_ROOT: "${{ env.VCPKG_INSTALLATION_ROOT }}"
 
 jobs:
   build:
