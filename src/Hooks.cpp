@@ -6,7 +6,7 @@ namespace MPL::Hooks
         void Reconfigure(RE::TESObjectREFR* a_ref, MPL::Config::RoomMarker marker_data)
         {
             auto* dh = RE::TESDataHandler::GetSingleton();
-            logger::info("Patching ref {:x} file: {}", a_ref->formID, a_ref->sourceFiles.array->front()->GetFilename());
+            logger::info("Patching ref {:x} file: {}", a_ref->GetFormID(), a_ref->sourceFiles.array->front()->GetFilename());
             auto* lightingTmpl = dh->LookupForm<RE::BGSLightingTemplate>(marker_data.formId, marker_data.lightMod);
             if (lightingTmpl != nullptr)
             {
@@ -22,7 +22,7 @@ namespace MPL::Hooks
                 }
             }
             else {
-                logger::info("{:x} is missing Room Ref Data", a_ref->formID);
+                logger::info("{:x} is missing Room Ref Data", a_ref->GetFormID());
             }
         }
     }  // namespace detail
