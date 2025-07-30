@@ -1,0 +1,52 @@
+#include <Config.h>
+namespace MPL::Hooks
+{
+    namespace detail
+    {
+        void Reconfigure(RE::TESObjectREFR* a_ref, MPL::Config::RoomMarker marker_data, bool from_hook)
+        {
+            auto* dh = RE::TESDataHandler::GetSingleton();
+            logger::info("Patching ref {:x} file: {} from_hook {}", a_ref->formID, a_ref->sourceFiles.array->front()->GetFilename(), from_hook);
+            auto* lightingTmpl = dh->LookupForm<RE::BGSLightingTemplate>(marker_data.formId, marker_data.lightMod);
+            if (lightingTmpl != nullptr)
+            {
+                auto edr = a_ref->extraList.GetByType<RE::ExtraRoomRefData>();
+                if (edr != nullptr && edr->data != nullptr)
+                {
+                    logger::info("OLD Template FORMID: {:x}, FILE: {}", edr->data->lightingTemplate->GetFormID(), edr->data->lightingTemplate->sourceFiles.array->front()->GetFilename());
+                    edr->data->lightingTemplate = lightingTmpl;
+                    logger::info("NEW Template FORMID: {:x}, FILE: {}", edr->data->lightingTemplate->GetFormID(), edr->data->lightingTemplate->sourceFiles.array->front()->GetFilename());
+                }
+                else {
+                    logger::info("Error in reference {:x} within file {}", a_ref->GetFormID(), a_ref->sourceFiles.array->front()->GetFilename());
+                }
+            }
+            else {
+                logger::info("{:x} is missing Room Ref Data", a_ref->formID);
+            }
+        }
+    }  // namespace detail
+    struct InitOBJ
+    {
+        using Target = RE::TESObjectREFR;
+        static void thunk(Target* a_ref)
+        {
+            func(a_ref);
+            if (a_ref->extraList.HasType(RE::ExtraDataType::kRoomRefData))
+            {
+                auto data_container = MPL::Config::DataContainer::GetSingleton();
+                auto comp = std::format("{:x}:{}", a_ref->GetLocalFormID(), a_ref->sourceFiles.array->front()->GetFilename());
+                if (data_container->Markers.contains(comp))
+                {
+                    detail::Reconfigure(a_ref, data_container->Markers.at(comp), true);
+                }
+            }
+        }
+        static inline REL::Relocation<decltype(thunk)> func;
+        static inline constexpr std::size_t index{ 0x13 };
+    };
+    void Install()
+    {
+        stl::install_hook<InitOBJ>();
+    }
+}  // namespace MPL::Hooks

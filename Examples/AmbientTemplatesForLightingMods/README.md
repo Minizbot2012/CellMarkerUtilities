@@ -1,0 +1,1 @@
+These are example files for [Ambient Templates for Lighting Mods](https://www.nexusmods.com/skyrimspecialedition/mods/153425) these are test files if you delete the cell edits of the nightmare version of that mod.
