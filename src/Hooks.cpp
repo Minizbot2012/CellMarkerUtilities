@@ -5,8 +5,8 @@ namespace MPL::Hooks
     T* GetForm(std::string edid)
     {
         auto std = StatData::GetSingleton();
-        auto form = std->Lookup(edid);
-        if (form != nullptr && form->Is(T::FORMTYPE))
+        auto form = std->Lookup<T>(edid);
+        if (form != nullptr)
         {
             return form->As<T>();
         }
@@ -76,7 +76,8 @@ namespace MPL::Hooks
         stl::install_hook<InitWS>();
         stl::install_hook<InitCell>();
     }
-    RE::TESForm* StatData::Lookup(std::string s)
+    template<class T>
+    T* StatData::Lookup(std::string s)
     {
         if (!this->cache.contains(s))
         {
@@ -85,12 +86,12 @@ namespace MPL::Hooks
             if (map)
             {
                 const auto it = std::find_if(map->begin(), map->end(), [&](auto itm) {
-                    return itm.second->sourceFiles.array->front()->GetFilename() == this->file && itm.second->GetFormEditorID() == s;
+                    return itm.second->Is(T::FORMTYPE) && itm.second->sourceFiles.array->front()->GetFilename() == this->file && itm.second->GetFormEditorID() == s;
                 });
                 if (it != map->end())
                 {
                     cache.insert({ s, it->first });
-                    return it->second;
+                    return it->second->As<T>();
                 }
                 else {
                     return nullptr;
@@ -101,7 +102,7 @@ namespace MPL::Hooks
             }
         }
         else {
-            return RE::TESForm::LookupByID(cache.at(s));
+            return RE::TESForm::LookupByID<T>(cache.at(s));
         }
     }
 }  // namespace MPL::Hooks

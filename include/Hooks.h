@@ -4,7 +4,8 @@ namespace MPL::Hooks
     class StatData : public REX::Singleton<StatData>
     {
     public:
-        RE::TESForm* Lookup(std::string s);
+        template<class T>
+        T* Lookup(std::string s);
         std::unordered_map<std::string, RE::FormID> cache;
         std::string file;
     };
