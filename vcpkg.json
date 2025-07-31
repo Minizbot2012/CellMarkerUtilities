@@ -2,7 +2,6 @@
   "version-string": "1",
   "dependencies": [
     "commonlibsse",
-    "clib-util",
     "simpleini"
   ]
 }

@@ -8,12 +8,9 @@
 #include <REX/REX.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/fmt/bin_to_hex.h>
-#include <windows.h>
-#include <ClibUtil/editorID.hpp>
 #include <SimpleIni.h>
-#include <unordered_set>
+#include <windows.h>
 // clang-format on
-using namespace clib_util;
 #ifdef SKYRIM_AE
 #    define OFFSET(se, ae) ae
 #    define OFFSET_3(se, ae, vr) ae

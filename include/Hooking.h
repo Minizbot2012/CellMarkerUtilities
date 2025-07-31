@@ -1,7 +1,5 @@
 #pragma once
 
-#include "SKSE/SKSE.h"
-
 #define ByteAt(addr) *reinterpret_cast<std::uint8_t*>(addr)
 
 /// Declraing a pre_hook function allows Hook to receive a call before the main hook will be installed.
