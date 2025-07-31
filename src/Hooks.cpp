@@ -8,7 +8,7 @@ namespace MPL::Hooks
         auto form = std->Lookup<T>(edid);
         if (form != nullptr)
         {
-            return form->As<T>();
+            return form;
         }
         return nullptr;
     }
@@ -76,7 +76,7 @@ namespace MPL::Hooks
         stl::install_hook<InitWS>();
         stl::install_hook<InitCell>();
     }
-    template<class T>
+    template <class T>
     T* StatData::Lookup(std::string s)
     {
         if (!this->cache.contains(s))
@@ -85,7 +85,7 @@ namespace MPL::Hooks
             [[maybe_unused]] const RE::BSReadLockGuard l{ lock };
             if (map)
             {
-                const auto it = std::find_if(map->begin(), map->end(), [&](auto itm) {
+                const auto it = std::find_if(std::execution::par, map->begin(), map->end(), [&](auto itm) {
                     return itm.second->Is(T::FORMTYPE) && itm.second->sourceFiles.array->front()->GetFilename() == this->file && itm.second->GetFormEditorID() == s;
                 });
                 if (it != map->end())
