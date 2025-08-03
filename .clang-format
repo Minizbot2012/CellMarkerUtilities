@@ -51,7 +51,7 @@ BreakConstructorInitializers: AfterColon
 BreakInheritanceList: AfterColon
 BreakStringLiterals: 'true'
 ColumnLimit: 0
-CompactNamespaces: 'false'
+CompactNamespaces: 'true'
 ConstructorInitializerAllOnOneLineOrOnePerLine: 'false'
 ConstructorInitializerIndentWidth: 1
 ContinuationIndentWidth: 4
