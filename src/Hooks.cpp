@@ -1,17 +1,6 @@
 #include <Hooks.h>
 namespace MPL::Hooks
 {
-    template <class T>
-    T* GetForm(std::string edid)
-    {
-        auto std = StatData::GetSingleton();
-        auto form = std->Lookup<T>(edid);
-        if (form != nullptr)
-        {
-            return form;
-        }
-        return nullptr;
-    }
     struct InitOBJ
     {
         using Target = RE::TESObjectREFR;
@@ -23,9 +12,13 @@ namespace MPL::Hooks
                 auto edr = a_ref->extraList.GetByType<RE::ExtraRoomRefData>();
                 if (edr->data->lightingTemplate != nullptr)
                 {
-                    auto itm = GetForm<RE::BGSLightingTemplate>(edr->data->lightingTemplate->GetFormEditorID());
+                    auto std = MPL::Config::StatData::GetSingleton();
+                    auto itm = std->Lookup(edr->data->lightingTemplate->GetFormEditorID());
                     if (itm != nullptr)
                     {
+#ifdef DEBUG
+                        logger::info("MARKER: REPLACING {:X}:{} W/ {:X}:{}", edr->data->lightingTemplate->GetLocalFormID(), edr->data->lightingTemplate->sourceFiles.array->front()->GetFilename(), itm->GetLocalFormID(), itm->sourceFiles.array->front()->GetFilename());
+#endif
                         edr->data->lightingTemplate = itm;
                     }
                 }
@@ -42,10 +35,14 @@ namespace MPL::Hooks
             func(a_ref);
             if (a_ref->lightingTemplate != nullptr)
             {
-                auto lt = GetForm<RE::BGSLightingTemplate>(a_ref->lightingTemplate->GetFormEditorID());
-                if (lt != nullptr)
+                auto std = MPL::Config::StatData::GetSingleton();
+                auto itm = std->Lookup(a_ref->lightingTemplate->GetFormEditorID());
+                if (itm != nullptr)
                 {
-                    a_ref->lightingTemplate = lt;
+#ifdef DEBUG
+                    logger::info("WORLDSPACE: REPLACING {:X}:{} W/ {:X}:{}", a_ref->lightingTemplate->GetLocalFormID(), a_ref->lightingTemplate->sourceFiles.array->front()->GetFilename(), itm->GetLocalFormID(), itm->sourceFiles.array->front()->GetFilename());
+#endif
+                    a_ref->lightingTemplate = itm;
                 }
             }
         }
@@ -60,10 +57,14 @@ namespace MPL::Hooks
             func(a_ref);
             if (a_ref->lightingTemplate != nullptr)
             {
-                auto lt = GetForm<RE::BGSLightingTemplate>(a_ref->lightingTemplate->GetFormEditorID());
-                if (lt != nullptr)
+                auto std = MPL::Config::StatData::GetSingleton();
+                auto itm = std->Lookup(a_ref->lightingTemplate->GetFormEditorID());
+                if (itm != nullptr)
                 {
-                    a_ref->lightingTemplate = lt;
+#ifdef DEBUG
+                    logger::info("CELL: REPLACING {:X}:{} W/ {:X}:{}", a_ref->lightingTemplate->GetLocalFormID(), a_ref->lightingTemplate->sourceFiles.array->front()->GetFilename(), itm->GetLocalFormID(), itm->sourceFiles.array->front()->GetFilename());
+#endif
+                    a_ref->lightingTemplate = itm;
                 }
             }
         }
@@ -75,34 +76,5 @@ namespace MPL::Hooks
         stl::install_hook<InitOBJ>();
         stl::install_hook<InitWS>();
         stl::install_hook<InitCell>();
-    }
-    template <class T>
-    T* StatData::Lookup(std::string s)
-    {
-        if (!this->cache.contains(s))
-        {
-            const auto& [map, lock] = RE::TESForm::GetAllForms();
-            [[maybe_unused]] const RE::BSReadLockGuard l{ lock };
-            if (map)
-            {
-                const auto it = std::find_if(std::execution::par, map->begin(), map->end(), [&](auto itm) {
-                    return itm.second->Is(T::FORMTYPE) && itm.second->sourceFiles.array->front()->GetFilename() == this->file && itm.second->GetFormEditorID() == s;
-                });
-                if (it != map->end())
-                {
-                    cache.insert({ s, it->first });
-                    return it->second->As<T>();
-                }
-                else {
-                    return nullptr;
-                }
-            }
-            else {
-                return nullptr;
-            }
-        }
-        else {
-            return RE::TESForm::LookupByID<T>(cache.at(s));
-        }
     }
 }  // namespace MPL::Hooks

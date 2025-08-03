@@ -8,7 +8,7 @@
 #include <REX/REX.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/fmt/bin_to_hex.h>
-#include <SimpleIni.h>
+#include <rfl/toml.hpp>
 #include <windows.h>
 // clang-format on
 #ifdef SKYRIM_AE

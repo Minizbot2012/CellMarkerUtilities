@@ -2,6 +2,9 @@
   "version-string": "1",
   "dependencies": [
     "commonlibsse",
-    "simpleini"
+    {
+      "name": "reflectcpp",
+      "features":[ "toml" ]
+    }
   ]
 }

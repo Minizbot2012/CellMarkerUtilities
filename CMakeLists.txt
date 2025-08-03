@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-set(NAME "MarkerEditor" CACHE STRING "")
+set(NAME "LightingUtil" CACHE STRING "")
 set(VERSION 0.1.0 CACHE STRING "")
 set(VR_VERSION 1)
 set(AE_VERSION 1)
@@ -124,11 +124,13 @@ target_include_directories(
 )
 
 find_package(${CommonLibName} CONFIG REQUIRED)
+find_package(reflectcpp CONFIG REQUIRED)
 
 target_link_libraries(
 	${PROJECT_NAME}
 	PRIVATE
 		${CommonLibName}::${CommonLibName}
+		reflectcpp::reflectcpp
 )
 
 target_precompile_headers(
