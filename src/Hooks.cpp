@@ -21,6 +21,11 @@ namespace MPL::Hooks
 #endif
                         edr->data->lightingTemplate = itm;
                     }
+#ifdef DEBUG
+                    else {
+                        logger::info("MARKER: NOT REPLACING {:X}:{}", edr->data->lightingTemplate->GetLocalFormID(), edr->data->lightingTemplate->sourceFiles.array->front()->GetFilename());
+                    }
+#endif
                 }
             }
         }
@@ -44,6 +49,11 @@ namespace MPL::Hooks
 #endif
                     a_ref->lightingTemplate = itm;
                 }
+#ifdef DEBUG
+                else {
+                    logger::info("WORLDSPACE: NOT REPLACING {:X}:{}", a_ref->lightingTemplate->GetLocalFormID(), a_ref->lightingTemplate->sourceFiles.array->front()->GetFilename());
+                }
+#endif
             }
         }
         static inline REL::Relocation<decltype(thunk)> func;
@@ -66,6 +76,11 @@ namespace MPL::Hooks
 #endif
                     a_ref->lightingTemplate = itm;
                 }
+#ifdef DEBUG
+                else {
+                    logger::info("CELL: NOT REPLACING {:X}:{}", a_ref->lightingTemplate->GetLocalFormID(), a_ref->lightingTemplate->sourceFiles.array->front()->GetFilename());
+                }
+#endif
             }
         }
         static inline REL::Relocation<decltype(thunk)> func;
