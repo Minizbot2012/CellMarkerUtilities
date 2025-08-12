@@ -4,33 +4,28 @@ namespace MPL::Hooks
     struct InitOBJ
     {
         using Target = RE::TESObjectREFR;
-        static inline void thunk(Target* a_ref)
+        static inline RE::NiAVObject* thunk(Target* a_ref, bool a_background)
         {
-            func(a_ref);
-            if (a_ref->extraList.HasType(RE::ExtraDataType::kRoomRefData))
+            auto* edr = a_ref->extraList.GetByType<RE::ExtraRoomRefData>();
+            if (edr != nullptr && edr->data->lightingTemplate != nullptr)
             {
-                auto edr = a_ref->extraList.GetByType<RE::ExtraRoomRefData>();
-                if (edr->data->lightingTemplate != nullptr)
+                auto* std = MPL::Config::StatData::GetSingleton();
+                auto* itm = std->Lookup(edr->data->lightingTemplate->GetFormEditorID());
+                if (itm != nullptr)
                 {
-                    auto std = MPL::Config::StatData::GetSingleton();
-                    auto itm = std->Lookup(edr->data->lightingTemplate->GetFormEditorID());
-                    if (itm != nullptr)
-                    {
 #ifdef DEBUG
-                        logger::info("MARKER: REPLACING {:X}:{} W/ {:X}:{}", edr->data->lightingTemplate->GetLocalFormID(), edr->data->lightingTemplate->sourceFiles.array->front()->GetFilename(), itm->GetLocalFormID(), itm->sourceFiles.array->front()->GetFilename());
+                    logger::info("(INIT) MARKER: {:X}:{} -> {:X}:{} W/ {:X}:{}", a_ref->GetLocalFormID(), a_ref->sourceFiles.array->front()->GetFilename(), edr->data->lightingTemplate->GetLocalFormID(), edr->data->lightingTemplate->sourceFiles.array->front()->GetFilename(), itm->GetLocalFormID(), itm->sourceFiles.array->front()->GetFilename());
 #endif
-                        edr->data->lightingTemplate = itm;
-                    }
+                    edr->data->lightingTemplate = itm;
 #ifdef DEBUG
-                    else {
-                        logger::info("MARKER: NOT REPLACING {:X}:{}", edr->data->lightingTemplate->GetLocalFormID(), edr->data->lightingTemplate->sourceFiles.array->front()->GetFilename());
-                    }
+                    logger::info("(INIT) MARKER: {:X}:{} -> {:X}:{}", a_ref->GetLocalFormID(), a_ref->sourceFiles.array->front()->GetFilename(), edr->data->lightingTemplate->GetLocalFormID(), edr->data->lightingTemplate->sourceFiles.array->front()->GetFilename());
 #endif
                 }
             }
+            return func(a_ref, a_background);
         }
         static inline REL::Relocation<decltype(thunk)> func;
-        static inline constexpr std::size_t index{ 0x13 };
+        static inline constexpr std::size_t index{ 0x6A };
     };
     struct InitWS
     {
@@ -45,15 +40,10 @@ namespace MPL::Hooks
                 if (itm != nullptr)
                 {
 #ifdef DEBUG
-                    logger::info("WORLDSPACE: REPLACING {:X}:{} W/ {:X}:{}", a_ref->lightingTemplate->GetLocalFormID(), a_ref->lightingTemplate->sourceFiles.array->front()->GetFilename(), itm->GetLocalFormID(), itm->sourceFiles.array->front()->GetFilename());
+                    logger::info("WORLDSPACE: {:X}:{} REPLACING {:X}:{} W/ {:X}:{}", a_ref->GetLocalFormID(), a_ref->sourceFiles.array->front()->GetFilename(), a_ref->lightingTemplate->GetLocalFormID(), a_ref->lightingTemplate->sourceFiles.array->front()->GetFilename(), itm->GetLocalFormID(), itm->sourceFiles.array->front()->GetFilename());
 #endif
                     a_ref->lightingTemplate = itm;
                 }
-#ifdef DEBUG
-                else {
-                    logger::info("WORLDSPACE: NOT REPLACING {:X}:{}", a_ref->lightingTemplate->GetLocalFormID(), a_ref->lightingTemplate->sourceFiles.array->front()->GetFilename());
-                }
-#endif
             }
         }
         static inline REL::Relocation<decltype(thunk)> func;
@@ -72,15 +62,10 @@ namespace MPL::Hooks
                 if (itm != nullptr)
                 {
 #ifdef DEBUG
-                    logger::info("CELL: REPLACING {:X}:{} W/ {:X}:{}", a_ref->lightingTemplate->GetLocalFormID(), a_ref->lightingTemplate->sourceFiles.array->front()->GetFilename(), itm->GetLocalFormID(), itm->sourceFiles.array->front()->GetFilename());
+                    logger::info("CELL: {:X}:{} REPLACING {:X}:{} W/ {:X}:{}", a_ref->GetLocalFormID(), a_ref->sourceFiles.array->front()->GetFilename(), a_ref->lightingTemplate->GetLocalFormID(), a_ref->lightingTemplate->sourceFiles.array->front()->GetFilename(), itm->GetLocalFormID(), itm->sourceFiles.array->front()->GetFilename());
 #endif
                     a_ref->lightingTemplate = itm;
                 }
-#ifdef DEBUG
-                else {
-                    logger::info("CELL: NOT REPLACING {:X}:{}", a_ref->lightingTemplate->GetLocalFormID(), a_ref->lightingTemplate->sourceFiles.array->front()->GetFilename());
-                }
-#endif
             }
         }
         static inline REL::Relocation<decltype(thunk)> func;
