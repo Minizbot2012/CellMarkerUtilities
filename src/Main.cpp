@@ -1,6 +1,6 @@
 #include <Config.h>
 #include <Hooks.h>
-#if defined(BUILD_SKYRIMAE) || defined(BUILD_SKYRIMSE)
+#if defined(SKYRIM_AE) || defined(SKYRIM_SE)
 extern "C" DLLEXPORT auto SKSEPlugin_Version = []() {
     SKSE::PluginVersionData v;
     v.PluginVersion({ 1, 0, 0, 0 });
