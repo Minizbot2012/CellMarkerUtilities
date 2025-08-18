@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
 
 env:
-  PRESET: "vs2022-windows-vcpkg-ae"
+  PRESET: "vs2022-windows-vcpkg-se"
   VCPKG_ROOT: ${{ github.workspace }}\vcpkg
-  PROJECT_NAME: LightingUtil-AE
+  PROJECT_NAME: LightingUtil-SE
       
 jobs:
   build:
@@ -35,3 +35,10 @@ jobs:
       with:
         path: |
             ${{ env.PROJECT_NAME }}.zip
+    - name: Create & Upload Release
+      id: upload-release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ${{ env.PROJECT_NAME }}.zip
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: ${{ env.PROJECT_NAME }} ${{ github.ref_name }}

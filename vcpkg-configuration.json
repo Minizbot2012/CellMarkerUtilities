@@ -6,5 +6,8 @@
   },
   "overlay-ports": [
     "CMake/ports/"
+  ],
+  "overlay-triplets": [
+    "CMake/triplets/"
   ]
 }

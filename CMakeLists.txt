@@ -3,11 +3,13 @@ set(NAME "LightingUtil" CACHE STRING "")
 set(VERSION 0.1.0 CACHE STRING "")
 set(VR_VERSION 1)
 set(AE_VERSION 1)
+set(SE_VERSION 1)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
 # ---- Options ----
 option(BUILD_SKYRIMVR "Build for Skyrim VR" OFF)
+option(BUILD_SKYRIMSE "Build for Skyrim SE" OFF)
 option(BUILD_SKYRIMAE "Build for Skyrim AE" OFF)
 
 # ---- Cache build vars ----
@@ -23,22 +25,20 @@ if(BUILD_SKYRIMAE)
 	add_compile_definitions(SKYRIM_AE)
 	add_compile_definitions(SKYRIM_SUPPORT_AE)
 	set(CommonLibName "CommonLibSSE")
-	set_from_environment(SkyrimAEPath)
-	set(SkyrimPath ${SkyrimAEPath})
 	set(SkyrimVersion "Skyrim AE")
 	set(VERSION ${VERSION}.${AE_VERSION})
+	set(VCPKG_MANIFEST_FEATURES "ae")
 elseif(BUILD_SKYRIMVR)
-	add_compile_definitions(SKYRIMVR)
+	add_compile_definitions(SKYRIM_VR)
 	add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 	set(CommonLibName "CommonLibVR")
-	set_from_environment(SkyrimVRPath)
-	set(SkyrimPath ${SkyrimVRPath})
 	set(SkyrimVersion "Skyrim VR")
 	set(VERSION ${VERSION}.${VR_VERSION})
+	set(VCPKG_MANIFEST_FEATURES "vr")
 else()
+	add_compile_definitions(SKYRIM_SE)
+	set(VCPKG_MANIFEST_FEATURES "sse")
 	set(CommonLibName "CommonLibSSE")
-	set_from_environment(Skyrim64Path)
-	set(SkyrimPath ${Skyrim64Path})
 	set(SkyrimVersion "Skyrim SSE")
 endif()
 
@@ -55,6 +55,7 @@ endif ()
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "")
 
 # ---- Project ----
+
 
 project(
 	${NAME}
@@ -82,6 +83,7 @@ endif ()
 
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF)
+
 
 # ---- Add source files ----
 

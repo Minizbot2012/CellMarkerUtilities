@@ -1,10 +1,38 @@
 {
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "version-string": "1",
   "dependencies": [
-    "commonlibsse",
     {
       "name": "reflectcpp",
-      "features":[ "toml" ]
+      "features": [
+        "toml"
+      ]
     }
-  ]
+  ],
+  "features": {
+    "ae": {
+      "description": "Build for AE",
+      "dependencies": [
+        {
+          "name": "commonlibsse"
+        }
+      ]
+    },
+    "sse": {
+      "description": "Build for SSE",
+      "dependencies": [
+        {
+          "name": "commonlibnsse"
+        }
+      ]
+    },
+    "vr": {
+      "description": "Build for VR",
+      "dependencies": [
+        {
+          "name": "commonlibvr"
+        }
+      ]
+    }
+  }
 }
