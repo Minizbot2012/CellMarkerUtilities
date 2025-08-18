@@ -8,37 +8,48 @@ on:
 
 env:
   PRESET: "vs2022-windows-vcpkg-se"
-  VCPKG_ROOT: ${{ github.workspace }}\vcpkg
-  PROJECT_NAME: LightingUtil-SE
-      
+  PROJECT_NAME: CellMarkerUtilities
+  VCPKG_ROOT: "C:\\vcpkg"
+
+permissions:
+  actions: read
+  contents: write
+
 jobs:
   build:
     runs-on: windows-2025
     steps:
-    - uses: actions/checkout@v4
-
-    - name: 🔽 Update VCPKG
+    - uses: actions/checkout@v5
+    - name: Update VCPKG
       run: |
-          git clone https://github.com/microsoft/vcpkg ${{ env.VCPKG_ROOT }}
-          cd "${{ env.VCPKG_ROOT }}"
-          bootstrap-vcpkg.bat -disableMetric
+        cd ${{ env.VCPKG_INSTALLATION_ROOT }}
+        bootstrap-vcpkg.bat -disableMetrics
+        vcpkg integrate install
+    - name: vcpkg cache
+      id: vcpkg-cache
+      uses: TAServers/vcpkg-cache@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Configure CMake
       run: cmake --preset ${{env.PRESET}}
-
+      env:
+        VCPKG_FEATURE_FLAGS: "binarycaching"
+        VCPKG_BINARY_SOURCES: "clear;files,${{ steps.vcpkg-cache.outputs.path }},readwrite"
     - name: Build
-      # Build your program with the given configuration
       run: cmake --build --preset ${{env.PRESET}}
     - name: Archive
-      run: 7z a $PROJECT_NAME.zip ./buildse/release/*.*
+      run: 7z a ${{ env.PROJECT_NAME }}-SE.zip ./build/release/*.*
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4
       with:
+        name: "Skyrim SE"
         path: |
-            ${{ env.PROJECT_NAME }}.zip
+            ${{ env.PROJECT_NAME }}-SE.zip
     - name: Create & Upload Release
       id: upload-release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
-        files: ${{ env.PROJECT_NAME }}.zip
+        files: ${{ env.PROJECT_NAME }}-SE.zip
         token: ${{ secrets.GITHUB_TOKEN }}
         name: ${{ env.PROJECT_NAME }} ${{ github.ref_name }}
+      if: github.ref_type == 'tag'
