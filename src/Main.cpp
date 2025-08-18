@@ -11,15 +11,18 @@ extern "C" DLLEXPORT auto SKSEPlugin_Version = []() {
     return v;
 }();
 #elif defined(SKYRIM_VR)
-extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info) {
+extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info)
+{
     a_info->infoVersion = SKSE::PluginInfo::kVersion;
     a_info->name = "LightingUtil";
     a_info->version = 0x10000000;
-    if(a_skse->IsEditor()) {
+    if (a_skse->IsEditor())
+    {
         return false;
     }
     const auto ver = a_skse->RuntimeVersion();
-    if(ver <SKSE::RUNTIME_VR_1_4_15) {
+    if (ver < SKSE::RUNTIME_VR_1_4_15)
+    {
         return false;
     }
     return true;
