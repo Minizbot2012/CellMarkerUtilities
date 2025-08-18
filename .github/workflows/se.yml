@@ -1,4 +1,4 @@
-name: Build Skyrim AE
+name: Build Skyrim SE
 
 on:
   push:

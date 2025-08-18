@@ -22,7 +22,7 @@
       "description": "Build for SSE",
       "dependencies": [
         {
-          "name": "commonlibnsse"
+          "name": "commonlibsse"
         }
       ]
     },
