@@ -44,7 +44,7 @@ jobs:
       with:
         name: "Skyrim VR"
         path: |
-            ${{ env.PROJECT_NAME }}-VR.zip
+            ./buildvr/release/*.*
     - name: Create & Upload Release
       id: upload-release
       uses: softprops/action-gh-release@v2
