@@ -2,17 +2,6 @@
 #define NOMINMAX
 #define UNICODE
 #define _UNICODE
-#ifdef SKYRIM_AE
-#    define OFFSET(se, ae) ae
-#    define OFFSET_3(se, ae, vr) ae
-#elif SKYRIM_VR
-#define SKYRIMVR
-#    define OFFSET(se, ae) se
-#    define OFFSET_3(se, ae, vr) vr
-#else
-#    define OFFSET(se, ae) se
-#    define OFFSET_3(se, ae, vr) se
-#endif
 // clang-format off
 #include "RE/Skyrim.h"
 #include "SKSE/SKSE.h"
@@ -22,6 +11,16 @@
 #include <rfl/toml.hpp>
 #include <windows.h>
 // clang-format on
+#ifdef SKYRIM_AE
+#    define OFFSET(se, ae) ae
+#    define OFFSET_3(se, ae, vr) ae
+#elif SKYRIM_VR
+#    define OFFSET(se, ae) se
+#    define OFFSET_3(se, ae, vr) vr
+#else
+#    define OFFSET(se, ae) se
+#    define OFFSET_3(se, ae, vr) se
+#endif
 #define DLLEXPORT __declspec(dllexport)
 namespace logger = SKSE::log;
 using namespace std::literals;
