@@ -17,7 +17,8 @@ namespace MPL::Config
             }
             else {
                 logger::error("Error {}, using defaults", cfg.error().what());
-                this->conf.sSearchFile = "AT - Nightmare.esp";
+                this->conf.sSearchFile = "ATLM.esp";
+                rfl::toml::save("Data/SKSE/Plugins/LightingUtil.toml", this->conf);
             }
         };
         RE::BGSLightingTemplate* Lookup(std::string s);
