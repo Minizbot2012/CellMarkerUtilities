@@ -1,27 +1,42 @@
 #include <Config.h>
 #include <Hooks.h>
-#if defined(SKYRIM_AE) || defined(SKYRIM_SE)
+#include <Plugin.h>
+#ifdef SKYRIM_AE
 extern "C" DLLEXPORT auto SKSEPlugin_Version = []() {
     SKSE::PluginVersionData v;
-    v.PluginVersion({ 1, 0, 0, 0 });
-    v.PluginName("LightingUtil");
+    v.PluginVersion(MPL::Plugin::MAJOR);
+    v.PluginName(MPL::Plugin::PROJECT.data());
     v.AuthorName("mini");
     v.UsesAddressLibrary();
     v.UsesNoStructs();
     return v;
 }();
-#elif defined(SKYRIM_VR)
+
+extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info)
+{
+    auto ver = a_skse->RuntimeVersion();
+    if(ver <= SKSE::RUNTIME_SSE_1_6_629) {
+        stl::report_and_fail("This is the improper version for your game. This is setup so that this plugin doesn't silently fail on your version. Please use the SE version in the fomod.");
+    }
+    return false;
+}
+
+#else
 extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info)
 {
     a_info->infoVersion = SKSE::PluginInfo::kVersion;
-    a_info->name = "LightingUtil";
-    a_info->version = 0x10000000;
+    a_info->name = MPL::Plugin::PROJECT.data();
+    a_info->version = MPL::Plugin::MAJOR;
     if (a_skse->IsEditor())
     {
         return false;
     }
     const auto ver = a_skse->RuntimeVersion();
+    #ifdef SKYRIMVR
     if (ver < SKSE::RUNTIME_VR_1_4_15)
+    #else
+    if(ver != SKSE::RUNTIME_SSE_1_5_97)
+    #endif
     {
         return false;
     }
