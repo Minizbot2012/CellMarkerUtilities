@@ -20,7 +20,8 @@ namespace MPL::Config
                 this->cache.insert({ s, (*it)->GetFormID() });
                 return *it;
             }
-            else {
+            else
+            {
                 this->misses.insert(s);
                 return nullptr;
             }

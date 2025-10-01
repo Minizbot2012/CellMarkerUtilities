@@ -7,11 +7,24 @@ vcpkg_from_git(
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-vcpkg_configure_cmake(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PREFER_NINJA
-        OPTIONS -DSKSE_SUPPORT_XBYAK=on -DSKYRIM_SUPPORT_AE=on
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+        FEATURES
+                skyrimae SKYRIM_AE
 )
+
+if(SKYRIM_AE)
+        vcpkg_configure_cmake(
+                SOURCE_PATH "${SOURCE_PATH}"
+                PREFER_NINJA
+                OPTIONS -DSKSE_SUPPORT_XBYAK=on -DSKYRIM_SUPPORT_AE=on
+        )
+else()
+        vcpkg_configure_cmake(
+                SOURCE_PATH "${SOURCE_PATH}"
+                PREFER_NINJA
+                OPTIONS -DSKSE_SUPPORT_XBYAK=on -DSKYRIM_SUPPORT_AE=off
+        )
+endif()
 
 vcpkg_install_cmake()
 vcpkg_cmake_config_fixup(PACKAGE_NAME CommonLibSSE CONFIG_PATH lib/cmake)
@@ -26,4 +39,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/CommonLibSSE/CommonLibSSE")
 file(
         INSTALL "${SOURCE_PATH}/LICENSE"
         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-        RENAME copyright)
+        RENAME copyright
+)

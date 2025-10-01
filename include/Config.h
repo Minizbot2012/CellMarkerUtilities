@@ -15,7 +15,8 @@ namespace MPL::Config
             {
                 this->conf = *cfg;
             }
-            else {
+            else
+            {
                 logger::error("Error {}, using defaults", cfg.error().what());
                 this->conf.sSearchFile = "ATLM.esp";
                 rfl::toml::save("Data/SKSE/Plugins/LightingUtil.toml", this->conf);
