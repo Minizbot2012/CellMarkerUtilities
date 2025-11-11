@@ -36,11 +36,25 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface* a
 };
 #endif
 
+void msg_cb(SKSE::MessagingInterface::Message* msg)
+{
+    auto sta = MPL::Config::StatData::GetSingleton();
+    switch (msg->type)
+    {
+    case SKSE::MessagingInterface::kDataLoaded:
+        sta->PostProcess();
+        break;
+    default:
+        break;
+    }
+}
+
 extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
 {
     SKSE::Init(a_skse);
     logger::info("Game version : {}", a_skse->RuntimeVersion().string());
     MPL::Hooks::Install();
     MPL::Config::StatData::GetSingleton()->LoadConfig();
+    SKSE::GetMessagingInterface()->RegisterListener(msg_cb);
     return true;
 }

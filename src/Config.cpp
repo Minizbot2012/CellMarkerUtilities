@@ -1,34 +1,36 @@
 #include <Config.h>
 namespace MPL::Config
 {
-    RE::BGSLightingTemplate* StatData::Lookup(std::string s)
+    void StatData::PostProcess()
     {
-        if (this->misses.contains(s))
+        for (auto [ed, id] : this->Templates.modded)
         {
-            return nullptr;
-        }
-        else if (!this->cache.contains(s))
-        {
-            auto dh = RE::TESDataHandler::GetSingleton();
-            auto file = dh->LookupModByName(this->conf.sSearchFile);
-            auto forms = dh->GetFormArray<RE::BGSLightingTemplate>();
-            const auto it = std::find_if(std::execution::par, forms.begin(), forms.end(), [&](auto itm) {
-                return file->IsFormInMod(itm->GetFormID()) && itm->GetFormEditorID() == s;
-            });
-            if (it != forms.end())
+            if (this->Templates.unmodded.contains(ed))
             {
-                this->cache.insert({ s, (*it)->GetFormID() });
-                return *it;
-            }
-            else
-            {
-                this->misses.insert(s);
-                return nullptr;
+#ifdef DEBUG
+                logger::info("Overriding template {}", ed);
+#endif
+                RE::BGSLightingTemplate* um = RE::TESForm::LookupByID<RE::BGSLightingTemplate>(this->Templates.unmodded.at(ed));
+                RE::BGSLightingTemplate* nw = RE::TESForm::LookupByID<RE::BGSLightingTemplate>(this->Templates.modded.at(ed));
+                um->data = nw->data;
+                um->directionalAmbientLightingColors = nw->directionalAmbientLightingColors;
             }
         }
-        else
+        this->Templates.modded.clear();
+        this->Templates.unmodded.clear();
+        for (auto [ed, id] : this->Imagespaces.modded)
         {
-            return RE::TESForm::LookupByID<RE::BGSLightingTemplate>(this->cache.at(s));
+            if (this->Imagespaces.unmodded.contains(ed))
+            {
+#ifdef DEBUG
+                logger::info("Overriding imagespace {}", ed);
+#endif
+                RE::TESImageSpace* um = RE::TESForm::LookupByID<RE::TESImageSpace>(this->Imagespaces.unmodded.at(ed));
+                RE::TESImageSpace* nw = RE::TESForm::LookupByID<RE::TESImageSpace>(this->Imagespaces.modded.at(ed));
+                um->data = nw->data;
+            }
         }
+        this->Imagespaces.modded.clear();
+        this->Imagespaces.unmodded.clear();
     }
 }  // namespace MPL::Config

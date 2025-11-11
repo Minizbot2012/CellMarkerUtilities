@@ -5,6 +5,10 @@ namespace MPL::Config
     {
         std::string sSearchFile;
     };
+    struct UMMPair {
+        std::unordered_map<std::string, RE::FormID> modded;
+        std::unordered_map<std::string, RE::FormID> unmodded;
+    };
     class StatData : public REX::Singleton<StatData>
     {
     public:
@@ -21,10 +25,10 @@ namespace MPL::Config
                 this->conf.sSearchFile = "ATLM.esp";
                 rfl::toml::save("Data/SKSE/Plugins/LightingUtil.toml", this->conf);
             }
-        };
-        RE::BGSLightingTemplate* Lookup(std::string s);
-        std::unordered_map<std::string, RE::FormID> cache;
-        std::unordered_set<std::string> misses;
+        }
+        void PostProcess();
+        UMMPair Templates;
+        UMMPair Imagespaces;
         Config conf;
     };
 }  // namespace MPL::Config
