@@ -36,12 +36,12 @@ BraceWrapping:
     AfterStruct: 'true'
     AfterUnion: 'true'
     AfterExternBlock: 'true'
-    BeforeCatch: 'false'
+    BeforeCatch: 'true'
     BeforeElse: 'true'
-    BeforeLambdaBody: 'false'
-    BeforeWhile: 'false'
+    BeforeLambdaBody: 'true'
+    BeforeWhile: 'true'
     IndentBraces: 'false'
-    SplitEmptyFunction: 'false'
+    SplitEmptyFunction: 'true'
     SplitEmptyRecord: 'false'
     SplitEmptyNamespace: 'false'
 BreakBeforeBinaryOperators: None
@@ -76,7 +76,7 @@ PointerAlignment: Left
 ReflowComments : 'false'
 SortIncludes: 'true'
 SortUsingDeclarations: 'true'
-SpaceAfterCStyleCast: 'false'
+SpaceAfterCStyleCast: 'true'
 SpaceAfterLogicalNot: 'false'
 SpaceAfterTemplateKeyword: 'true'
 SpaceBeforeAssignmentOperators: 'true'
@@ -97,6 +97,6 @@ SpacesInParentheses: 'false'
 SpacesInSquareBrackets: 'false'
 Standard: Latest
 TabWidth: 4
-UseCRLF: 'true'
+UseCRLF: 'false'
 UseTab: Never
 ...
