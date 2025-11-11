@@ -5,7 +5,8 @@ namespace MPL::Config
     {
         std::string sSearchFile;
     };
-    struct UMMPair {
+    struct UMMPair
+    {
         std::unordered_map<std::string, RE::FormID> modded;
         std::unordered_map<std::string, RE::FormID> unmodded;
     };

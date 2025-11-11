@@ -3,7 +3,8 @@
 #include <Plugin.h>
 
 #ifdef SKYRIM_AE
-extern "C" DLLEXPORT auto SKSEPlugin_Version = []() {
+extern "C" DLLEXPORT auto SKSEPlugin_Version = []()
+{
     SKSE::PluginVersionData v;
     v.PluginVersion(MPL::Plugin::MAJOR);
     v.PluginName(MPL::Plugin::PROJECT.data());

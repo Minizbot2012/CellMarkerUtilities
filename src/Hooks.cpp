@@ -15,11 +15,13 @@ namespace MPL::Hooks
                 logger::info("Loaded Modded Template {} {}:{:06X}", a_ref->GetFormEditorID(), a_mod->GetFilename(), a_ref->GetLocalFormID());
 #endif
             }
-            else {
-                if(!sta->Templates.unmodded.contains(a_ref->GetFormEditorID())) {
-                sta->Templates.unmodded.insert(std::make_pair(a_ref->GetFormEditorID(), a_ref->GetFormID()));
+            else
+            {
+                if (!sta->Templates.unmodded.contains(a_ref->GetFormEditorID()))
+                {
+                    sta->Templates.unmodded.insert(std::make_pair(a_ref->GetFormEditorID(), a_ref->GetFormID()));
 #ifdef DEBUG
-                logger::info("Loaded Unmodded Template {} {}:{:06X}", a_ref->GetFormEditorID(), a_mod->GetFilename(), a_ref->GetLocalFormID());
+                    logger::info("Loaded Unmodded Template {} {}:{:06X}", a_ref->GetFormEditorID(), a_mod->GetFilename(), a_ref->GetLocalFormID());
 #endif
                 }
             }
@@ -42,14 +44,16 @@ namespace MPL::Hooks
                 logger::info("Loaded Modded Imagespace {} {}:{:06X}", a_ref->GetFormEditorID(), a_mod->GetFilename(), a_ref->GetLocalFormID());
 #endif
             }
-            else {
-                if(!sta->Imagespaces.unmodded.contains(a_ref->GetFormEditorID())) {
-                sta->Imagespaces.unmodded.insert(std::make_pair(a_ref->GetFormEditorID(), a_ref->GetFormID()));
+            else
+            {
+                if (!sta->Imagespaces.unmodded.contains(a_ref->GetFormEditorID()))
+                {
+                    sta->Imagespaces.unmodded.insert(std::make_pair(a_ref->GetFormEditorID(), a_ref->GetFormID()));
 #ifdef DEBUG
-                logger::info("Loaded Unmodded Imagespace {} {}:{:06X}", a_ref->GetFormEditorID(), a_mod->GetFilename(), a_ref->GetLocalFormID());
+                    logger::info("Loaded Unmodded Imagespace {} {}:{:06X}", a_ref->GetFormEditorID(), a_mod->GetFilename(), a_ref->GetLocalFormID());
 #endif
+                }
             }
-        }
         }
         static inline REL::Relocation<decltype(thunk)> func;
         static inline constexpr std::size_t index{ 0x6 };
@@ -57,9 +61,6 @@ namespace MPL::Hooks
 
     void Install()
     {
-        //stl::install_hook<InitOBJ>();
-        //stl::install_hook<InitWS>();
-        //stl::install_hook<InitCell>();
         stl::install_hook<LoadLT>();
         stl::install_hook<LoadIMG>();
     }
