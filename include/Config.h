@@ -3,7 +3,8 @@ namespace MPL::Config
 {
     struct Config
     {
-        std::string sSearchFile;
+        std::string sTemplateSearchFile;
+        std::string sISpaceSearchFile;
     };
     struct UMMPair
     {
@@ -23,7 +24,8 @@ namespace MPL::Config
             else
             {
                 logger::error("Error {}, using defaults", cfg.error().what());
-                this->conf.sSearchFile = "ATLM.esp";
+                this->conf.sTemplateSearchFile = "ATLM.esp";
+                this->conf.sISpaceSearchFile = "ATLM - HDR.esp";
                 rfl::toml::save("Data/SKSE/Plugins/LightingUtil.toml", this->conf);
             }
         }

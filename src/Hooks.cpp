@@ -8,7 +8,7 @@ namespace MPL::Hooks
         {
             func(a_ref, a_mod);
             auto sta = MPL::Config::StatData::GetSingleton();
-            if (a_mod->GetFilename() == sta->conf.sSearchFile)
+            if (a_mod->GetFilename() == sta->conf.sTemplateSearchFile)
             {
                 sta->Templates.modded.insert(std::make_pair(a_ref->GetFormEditorID(), a_ref->GetFormID()));
 #ifdef DEBUG
@@ -37,7 +37,7 @@ namespace MPL::Hooks
         {
             func(a_ref, a_mod);
             auto sta = MPL::Config::StatData::GetSingleton();
-            if (a_mod->GetFilename() == sta->conf.sSearchFile)
+            if (a_mod->GetFilename() == sta->conf.sISpaceSearchFile)
             {
                 sta->Imagespaces.modded.insert(std::make_pair(a_ref->GetFormEditorID(), a_ref->GetFormID()));
 #ifdef DEBUG
